@@ -30,6 +30,8 @@ public class GraduationProject {
         Double [][] doubleArray = new Double[517][13];
         int count = 0 ;
         Double [] sutunOrts = new Double[13];
+        Double [] sutunVar = new Double[13];
+        Double [][] scaledArray = new Double [517][13];
        
             while (satirOku!=null) {
             
@@ -92,6 +94,9 @@ public class GraduationProject {
                            System.out.print("\n");
                     }
                     
+                    
+                    System.out.println("------------------------------------------------------------");
+                    
                  int x = 0;
                  int y = 0 ;
                  int z = 0;
@@ -129,17 +134,66 @@ public class GraduationProject {
                 for (int i = 0; i < 13; i++) {
                         System.out.println(sutunOrts[i]);
                 }
-                 
+                
+                System.out.println("-------------------------------------------------------------------------");
                 // sutun ortalamaları bulundu varyanslar bulunacak
                 
-                 
+                int a = 0 , b = 0 , c = 0; 
+                double toplamVar = 0 , toplamVar1 = 0;
+                
+                   while(a != 517){
+                      toplamVar =  doubleArray[a][b] - sutunOrts[c];
+                      toplamVar1 +=  Math.pow(toplamVar, 2);
+                      a++;
+                        
+                      if(a == 517){
+                       
+                        sutunVar[c] = Math.sqrt(toplamVar1 / 516);
+                        a = 0;
+                        b++;
+                        toplamVar1 = 0;
+                        c++;
+                      }
+                      
+                      toplamVar = 0;
+                      
+                       if(c == 13){
+                        break;
+                    }
                     
+                   } 
+                   
+                    for (int i = 0; i < 13; i++) {
+                       System.out.println(sutunVar[i]);
+                }
                     
-                    
-                    
-                    
-                    
-                    
+              //  System.out.println("-------------------------------------------------------------------------");
+                   
+                
+                a = 0; b = 0; c = 0;
+                
+                while(a != 517){
+                  scaledArray[a][b]  = ((doubleArray[a][b] - sutunOrts[c]) / sutunVar[c]);
+                  a++;
+                  if(a == 517){
+                      a = 0;
+                      b++;
+                      c++;
+                  }
+                  
+                  if ( c == 13){
+                      break;
+                  }
+                  
+                }
+                
+                 for (int i = 0; i < 517; i++) {
+                        for (int j = 0; j < 13; j++) {
+                           System.out.print(scaledArray[i][j] + " ");
+                        }
+                          System.out.print("\n");
+                    }
+                
           
     }
     
