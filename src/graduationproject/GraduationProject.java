@@ -12,6 +12,38 @@ import java.io.IOException;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 import Jama.examples.MagicSquareExample;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import org.apache.commons.math3.linear.EigenDecomposition;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.correlation.Covariance;
+import flanagan.analysis.PCA;
+import org.jzy3d.analysis.AbstractAnalysis;
+import org.jzy3d.analysis.AnalysisLauncher;
+import org.jzy3d.chart.Chart;
+import org.jzy3d.chart.ChartLauncher;
+import org.jzy3d.chart.SwingChart;
+import org.jzy3d.chart.factories.AWTChartComponentFactory;
+import static org.jzy3d.chart.factories.AWTChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
+import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
+import static org.jzy3d.chart2d.Chart2dComponentFactory.chart;
+import org.jzy3d.colors.Color;
+import org.jzy3d.colors.ColorMapper;
+import org.jzy3d.colors.colormaps.ColorMapRainbow;
+import org.jzy3d.maths.Coord3d;
+import org.jzy3d.plot3d.primitives.AbstractDrawable;
+import org.jzy3d.plot3d.primitives.Scatter;
+import org.jzy3d.plot3d.primitives.ScatterMultiColor;
+import org.jzy3d.plot3d.rendering.canvas.Quality;
+
 
 /**
  *
@@ -94,9 +126,9 @@ public class GraduationProject {
             
                     for (int i = 0; i < 517; i++) {
                         for (int j = 0; j < 13; j++) {
-                     //     System.out.print(doubleArray[i][j] + " ");
+                    //     System.out.print(doubleArray[i][j] + " ");
                         }
-                      //    System.out.print("\n");
+                     //    System.out.print("\n");
                     }
                     
                  int x = 0;
@@ -136,7 +168,7 @@ public class GraduationProject {
                 }
                 
                 System.out.println("-------------------------------------------------------------------------");
-                // sutun ortalamaları bulundu varyanslar bulunacak
+                // sutun ortalamaları bulundu standart sapmalar bulunacak
                 
                 int a = 0 , b = 0 , c = 0; 
                 double toplamVar = 0 , toplamVar1 = 0;
@@ -210,6 +242,18 @@ public class GraduationProject {
                    }
         }
                
+                   int zz = 0;
+           double toplammm = 0;
+           while(zz != 517){
+               toplammm += scaledArray[zz][0];
+               zz++;
+           }
+           
+         //  System.out.println(" toplam :"+toplammm);
+        
+         //  System.out.println(" top    :"+ toplammm/517);
+               
+               
                
                 for (int i = 0; i < 13; i++) {
                  for (int j = 0; j < 517; j++) {
@@ -234,49 +278,160 @@ public class GraduationProject {
                 
                   for (int i = 0; i < 13; i++) {
                   for (int j = 0; j < 13; j++) {
-                  //   System.out.print(covarrianceArray[i][j] + "  ");
+                //     System.out.print(covarrianceArray[i][j] + "  ");
                   }
-                 //   System.out.println("");
+                //    System.out.println("");
         }
-                  
-                 Matrix mat = new Matrix(covarrianceArray);
-              
-             //    EigenvalueDecomposition ee = mat.eig();
-             //    Matrix V = ee.getV();
-             //    Matrix D = ee.getD();
-                
-                 
-                EigenvalueDecomposition E = new EigenvalueDecomposition(mat.plus(mat.transpose()).times(0.5));
-           
-                 double [] d = E.getRealEigenvalues();
-             
-                 Matrix v = E.getV();
-                 Matrix dd = E.getD();
-                 System.out.println("Eigenvectors : ?");
-                         
-                 v.print(5,5);
-                 dd.print(5, 5);
-                 
-              System.out.println("Eigenvalues : ");
-              
-              
-                 for (int i = 0; i < d.length; i++) {
-                     // System.out.print(d[i] + "    ");
-        }
-
-              //   V.print(13, 13);
-                  
-                 // D.print(13, 13);
-
-                //  System.out.println("----------------------------------------");
-                  
-                  
-                // check that v is orthogonal
-             //  System.out.println(v.times(v.transpose()).minus(Matrix.identity(13, 13)).normInf());
+          
                
-                // check that mat v = dd v
-              //    System.out.println(mat.times(v).minus(v.times(dd)).normInf());
+               // ucuncu kutuphane 
+               
+                      PCA pca = new PCA();
+                 
+                 pca.enterScoresAsRowPerPerson(doubleArray);
+              
+                    pca.useCovarianceMatrix();
+                    System.out.println("to");
+                   
+                   
+                  double [] son = pca.orderedEigenValues();
+                   double[][] dene =  pca.orderedEigenVectors();
                   
+                  
+                   for (int i = 0; i < 13; i++) {
+                       for (int j = 0; j < 13; j++) {
+                           System.out.print(dene[i][j] + "  ");
+                       }
+                       System.out.println("");
+        }
+                   double tempDizi [][] = new double[13][3];
+                   
+                   int temp1 = 0 , temp2 = 0;
+                   
+                   while(temp1 != 13){
+                       tempDizi[temp1][temp2] = dene[temp1][temp2];
+                       temp2++;
+                       
+                       if(temp2 == 3){
+                           temp2 = 0;
+                           temp1++;
+                       }
+                       
+                   }
+                   
+                   
+                   System.out.println("");
+                   
+//                      for (int i = 0; i < son.length; i++) {
+//                      System.out.println("son:  " +son[i] + "    ");
+//        }
+//          
+                         System.out.println("");
+              double toplamm =  son[0]+son[1]+son[2]; 
+                 double toplammm2 = 0;
+                 
+                 
+                 for (int i = 0; i < son.length; i++) {
+                  toplammm2 += son[i];
+        }
+                 
+               double sonuc =  (toplamm / toplammm2)*100; 
+                 
+               System.out.println("sonuc son   :" +sonuc);
+               
+               double sonDizi [][] = new double[517][3];
+               
+            
+                     
+                     System.out.println("tempdizii");
+               
+                     for (int i = 0; i < 13; i++) {
+                         for (int j = 0; j < 3; j++) {
+                        //     System.out.print(tempDizi[i][j] + "  ");
+                         }
+                     //    System.out.println("");
+        }
+                     
+                     
+                        for (int i = 0; i < 517; i++) {
+                 for (int j = 0; j < 3; j++) {
+                     sonDizi[i][j] = 0.0;
+                 }
+        }
+                     
+                     System.out.println("-------------------------------------------");
+                                for (int i = 0; i < 517; i++) {
+                  for (int j = 0; j < 3; j++) {
+                      for (int k = 0; k < 13; k++) {
+                           sonDizi[i][j]+=(doubleArray[i][k]*tempDizi[k][j]);
+                      }
+                  }
+        } 
+                     for (int i = 0; i < 517; i++) {
+                         for (int j = 0; j < 3; j++) {
+                          //   System.out.print(sonDizi[i][j] + "  ");
+                         }
+                      //   System.out.println("");
+        }
+                     
+     int size = 100000;
+float xx;
+float yy;
+float zzz;
+Coord3d[] points = new Coord3d[size];
+
+// Create scatter points
+for(int i=0; i<size; i++){
+    xx = (float)Math.random() - 0.5f;
+    yy = (float)Math.random() - 0.5f;
+    zzz = (float)Math.random() - 0.5f;
+    points[i] = new Coord3d(xx, yy, zzz);
+}       
+
+    // Create a drawable scatter with a colormap
+    ScatterMultiColor scatter = new ScatterMultiColor( points, new ColorMapper( new ColorMapRainbow(), -0.5f, 0.5f ) );
+
+    // Create a chart and add scatter
+        SwingChart  chart = new SwingChart();
+    chart.getAxeLayout().setMainColor(Color.WHITE);
+    chart.getView().setBackgroundColor(Color.BLACK);
+    chart.getScene().add(scatter);
+    ChartLauncher.openChart(chart);                
+              
+               
+               
+          
     }
+   
     
+    
+     public static void Write(String string[][]){
+       
+      try{
+          FileWriter fr = new FileWriter("C:\\Users\\yigido\\Desktop\\dataset.txt");
+          BufferedWriter br = new BufferedWriter(fr);
+          PrintWriter out = new PrintWriter(br);
+          for(int i=0; i<517; i++){
+              for (int j = 0; j < 13; j++) {
+                  if(string[i][j] != null){
+                   
+            out.write(string[i][j] + " ");
+            
+            if(j != 12)
+            out.write(",");
+            
+            if(j == 12)
+                 out.write("\n");
+               
+                  }
+               
+              }
+            br.newLine();
+          }
+          out.close();
+      }
+      catch(IOException e){
+       System.out.println(e);   
+      }
+  }
 }
