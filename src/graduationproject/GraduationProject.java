@@ -20,43 +20,38 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.correlation.Covariance;
 import flanagan.analysis.PCA;
+import java.util.Random;
 import org.jzy3d.analysis.AbstractAnalysis;
 import org.jzy3d.analysis.AnalysisLauncher;
-import org.jzy3d.chart.Chart;
-import org.jzy3d.chart.ChartLauncher;
-import org.jzy3d.chart.SwingChart;
+import org.jzy3d.analysis.IAnalysis;
 import org.jzy3d.chart.factories.AWTChartComponentFactory;
-import static org.jzy3d.chart.factories.AWTChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.NewtChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
-import static org.jzy3d.chart.factories.SwingChartComponentFactory.chart;
-import static org.jzy3d.chart2d.Chart2dComponentFactory.chart;
 import org.jzy3d.colors.Color;
-import org.jzy3d.colors.ColorMapper;
-import org.jzy3d.colors.colormaps.ColorMapRainbow;
 import org.jzy3d.maths.Coord3d;
-import org.jzy3d.plot3d.primitives.AbstractDrawable;
 import org.jzy3d.plot3d.primitives.Scatter;
-import org.jzy3d.plot3d.primitives.ScatterMultiColor;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.awt.GLCanvas;
+import java.util.Properties;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  *
  * @author yigido
  */
-public class GraduationProject {
+public class GraduationProject extends AbstractAnalysis{
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException{
+    
+    public static double sonDizi [][] = new double[517][3];
+    public static void main(String[] args) throws IOException, Exception{
         // TODO code application logic here
-        File dataset=new File("C:\\Users\\yigido\\Desktop\\Bitirme\\datasets.txt");
+        File dataset=new File("C:\\Users\\YigitMert\\Desktop\\Bitirme\\datasets.txt");
         FileInputStream oku=new FileInputStream(dataset);
         DataInputStream okumak2=new DataInputStream(oku);
         String satirOku=okumak2.readLine();
@@ -339,11 +334,11 @@ public class GraduationProject {
                  
                System.out.println("sonuc son   :" +sonuc);
                
-               double sonDizi [][] = new double[517][3];
+               
                
             
                      
-                     System.out.println("tempdizii");
+                  //   System.out.println("tempdizii");
                
                      for (int i = 0; i < 13; i++) {
                          for (int j = 0; j < 3; j++) {
@@ -374,33 +369,34 @@ public class GraduationProject {
                       //   System.out.println("");
         }
                      
-     int size = 100000;
-float xx;
-float yy;
-float zzz;
-Coord3d[] points = new Coord3d[size];
-
-// Create scatter points
-for(int i=0; i<size; i++){
-    xx = (float)Math.random() - 0.5f;
-    yy = (float)Math.random() - 0.5f;
-    zzz = (float)Math.random() - 0.5f;
-    points[i] = new Coord3d(xx, yy, zzz);
-}       
-
-    // Create a drawable scatter with a colormap
-    ScatterMultiColor scatter = new ScatterMultiColor( points, new ColorMapper( new ColorMapRainbow(), -0.5f, 0.5f ) );
-
-    // Create a chart and add scatter
-        SwingChart  chart = new SwingChart();
-    chart.getAxeLayout().setMainColor(Color.WHITE);
-    chart.getView().setBackgroundColor(Color.BLACK);
-    chart.getScene().add(scatter);
-    ChartLauncher.openChart(chart);                
-              
-               
-               
-          
+//     int size = 100000;
+//float xx;
+//float yy;
+//float zzz;
+//Coord3d[] points = new Coord3d[size];
+//
+//// Create scatter points
+//for(int i=0; i<size; i++){
+//    xx = (float)Math.random() - 0.5f;
+//    yy = (float)Math.random() - 0.5f;
+//    zzz = (float)Math.random() - 0.5f;
+//    points[i] = new Coord3d(xx, yy, zzz);
+//}       
+//
+//    // Create a drawable scatter with a colormap
+//    ScatterMultiColor scatter = new ScatterMultiColor( points, new ColorMapper( new ColorMapRainbow(), -0.5f, 0.5f ) );
+//
+//    // Create a chart and add scatter
+//        SwingChart  chart = new SwingChart();
+//    chart.getAxeLayout().setMainColor(Color.WHITE);
+//    chart.getView().setBackgroundColor(Color.BLACK);
+//    chart.getScene().add(scatter);
+//    ChartLauncher.openChart(chart);           
+                     
+      AnalysisLauncher.open(new GraduationProject());
+      
+     
+      
     }
    
     
@@ -434,4 +430,49 @@ for(int i=0; i<size; i++){
        System.out.println(e);   
       }
   }
+
+    @Override
+    public void init() throws Exception {
+       
+        
+        double x;
+        double y;
+        double z;
+        double a;
+        
+        Coord3d[] points = new Coord3d[517];
+        Color[]   colors = new Color[517];
+        
+    
+       
+        int i = 0 , j = 0;
+        
+        while(i != 517){
+           
+                x = sonDizi[i][j];
+                j++;
+                y= sonDizi[i][j];
+                j++;
+                z = sonDizi[i][j];
+                j++;
+                 points[i] = new Coord3d(x, y, z);
+            a = 4.0;
+            colors[i] = new Color((float)x,(float) y, (float)z,(float) a);
+                if(j == 3){
+                    j=0;
+                    i++;
+                }
+                
+        }
+        
+        System.out.println(i);
+        
+        
+        
+        Scatter scatter = new Scatter(points, colors);
+        chart = AWTChartComponentFactory.chart(Quality.Advanced, "newt");
+        chart.getScene().add(scatter);
+        
+        
+    }
 }
